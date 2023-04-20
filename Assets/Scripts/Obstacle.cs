@@ -5,12 +5,12 @@ using UnityEngine;
 public class Obstacle : MonoBehaviour
 {
     public float Movespeed = 3.5f;
-    public Vector3 Spawnpoint = Vector3.zero;
+    private Vector3 spawnpoint = Vector3.zero;
 
 
     private void Start()
     {
-        Spawnpoint = transform.position;
+        spawnpoint = transform.position;
     }
 
     private void Update()
@@ -20,9 +20,9 @@ public class Obstacle : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Wall") | collision.gameObject.CompareTag("mlagent") == true)
+        if (collision.gameObject.CompareTag("Wall") | collision.gameObject.CompareTag("mlagent"))
         {
-            transform.position = Spawnpoint;
+            transform.position = spawnpoint;
         }
     }
 }
