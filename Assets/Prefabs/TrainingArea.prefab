@@ -341,8 +341,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 8
-    NumStackedVectorObservations: 1
+    VectorObservationSize: 12
+    NumStackedVectorObservations: 2
     m_ActionSpec:
       m_NumContinuousActions: 0
       BranchSizes: 02000000
@@ -357,7 +357,7 @@ MonoBehaviour:
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
-  m_ObservableAttributeHandling: 0
+  m_ObservableAttributeHandling: 2
 --- !u!54 &1166521519546380804
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -392,9 +392,10 @@ MonoBehaviour:
   MaxStep: 0
   force: 7
   minVelocityLimit: 0.05
-  Target: {fileID: 1166521518950682780}
-  negativeReward: 1
-  positiefReward: 1
+  Target1: {fileID: 1166521518950682780}
+  Target2: {fileID: 1442306728823918801}
+  negativeReward: 2
+  positiveReward: 1
 --- !u!114 &5609230263019033900
 MonoBehaviour:
   m_ObjectHideFlags: 0
