@@ -8,6 +8,7 @@ TagManager:
   - obstacle
   - mlagent
   - floor
+  - points
   layers:
   - Default
   - TransparentFX

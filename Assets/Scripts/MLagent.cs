@@ -13,13 +13,17 @@ using UnityEditor.UIElements;
 public class MLagent : Agent
 {
     public float force = 20f;
-    public float minVelocityLimit = 0.05f;
-    public Transform Target;
+    public float minVelocityLimit = 0.005f;
+    public GameObject Target;
     public float negativeReward = 5f;
     public float positiefReward = 1f;
     private Rigidbody rb;
+    private Rigidbody trb;
     private Vector3 spawnpoint = Vector3.zero;
-    private bool died = false;
+    //private bool died = false;
+
+    //float timeRunning = 0.0f;
+
 
 
     //starting function
@@ -33,6 +37,7 @@ public class MLagent : Agent
     public override void Initialize()
     {
         rb = this.GetComponent<Rigidbody>();
+        trb = Target.GetComponent<Rigidbody>();
         spawnpoint = transform.position;
         rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
     }
@@ -40,30 +45,35 @@ public class MLagent : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         // Target en Agent position
-        sensor.AddObservation(Target.localPosition);
+        sensor.AddObservation(Target.transform.localPosition);
         sensor.AddObservation(this.transform.localPosition);
 
+        // Agent velocity
+        sensor.AddObservation(rb.velocity.y);
+        sensor.AddObservation(trb.velocity.z);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        print("onaction");
         if (actions.DiscreteActions[0] > 0)
         {
             Thrust();
         }
+
+/*        if (Math.Abs(rb.velocity.y) < minVelocityLimit)
+        {
+            SetReward(0.5f);
+        }*/
     }
 
     public override void OnEpisodeBegin()
     {
         transform.position = spawnpoint;
-        print("onepisode");
     }
 
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        print("jup");
         var discreteActionsOut = actionsOut.DiscreteActions;
         discreteActionsOut[0] = Input.GetKey(KeyCode.UpArrow) ? 1 : 0;
     }
@@ -75,21 +85,23 @@ public class MLagent : Agent
             }
         }*/
 
-    private void Update()
+/*    private void Update()
     {
+    
+       timeRunning += Time.deltaTime;
         if (!died)
         {
-            SetReward(Time.deltaTime*positiefReward);
+            SetReward(timeRunning * positiefReward);
+            timeRunning = 0.0f; //Restart counting
         }
         
-    }
+        
+    }*/
 
     private void Thrust()
     {
-        print("trust");
         if (Math.Abs(rb.velocity.y) < minVelocityLimit)
         {
-            print("accusal trust");
             rb.AddForce(new Vector3(0, force, 0), ForceMode.Impulse);
         }
     }
@@ -98,10 +110,14 @@ public class MLagent : Agent
     {
         if (collision.gameObject.CompareTag("obstacle"))
         {
-            print("died");
-            died = true;
-            AddReward(negativeReward);
+            //died = true;
+            AddReward(-negativeReward);
             EndEpisode();
+        }
+
+        if (collision.gameObject.CompareTag("points"))
+        {
+            SetReward(positiefReward);
         }
     }
 }
