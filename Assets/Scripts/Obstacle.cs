@@ -14,15 +14,21 @@ public class Obstacle : MonoBehaviour
 
     private void Start()
     {
+        // Get the starting positions
         spawnpoint = transform.position;
         spawnRotation = transform.rotation;
         rb = this.GetComponent<Rigidbody>();
+
+        // He can only move in the horizontal axis, constrain all other axis.
         rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
     }
 
     private void Update()
     {
+        // Start moving the block
         transform.Translate(Vector3.back * Movespeed * Time.deltaTime);
+
+        // Respawn if the block falls of the platform or goes to far
         if (transform.localPosition.y < 0 | transform.localPosition.z < -8)
         {
             transform.position = spawnpoint;
@@ -32,6 +38,8 @@ public class Obstacle : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        // Respawn if it has collisions with the wall behind the agent or if he collides with the agent.
+
         if (collision.gameObject.CompareTag("Wall") | collision.gameObject.CompareTag("mlagent"))
         {
             transform.position = spawnpoint;
