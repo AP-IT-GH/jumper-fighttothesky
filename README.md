@@ -1,3 +1,4 @@
+Van: Fleur Van Buijten
 # Beschrijving
 
 In dit project heb ik geprobeerd om een machine learning agent te trainen in Unity om verschillende blokken te ontwijken.
